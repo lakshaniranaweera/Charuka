@@ -15,8 +15,9 @@ export function useFilteredEvents(
       if (state.status !== 'all' && getEventStatus(e.event_date) !== state.status) {
         return false
       }
-      if (state.from && e.event_date < state.from) return false
-      if (state.to && e.event_date > state.to) return false
+      // Undated (pending) events are excluded when a date range is applied.
+      if (state.from && (!e.event_date || e.event_date < state.from)) return false
+      if (state.to && (!e.event_date || e.event_date > state.to)) return false
       return true
     })
   }, [events, state.status, state.from, state.to])

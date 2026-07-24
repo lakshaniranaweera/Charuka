@@ -9,7 +9,7 @@ create extension if not exists "pgcrypto";
 -- ----------------------------------------------------------------------------
 create table if not exists public.events (
   id                 uuid primary key default gen_random_uuid(),
-  event_date         date not null,
+  event_date         date,
   event_name         text not null check (char_length(event_name) between 1 and 200),
   cost               numeric(14, 2) not null default 0 check (cost >= 0),
   previsit_date      date,

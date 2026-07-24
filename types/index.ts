@@ -9,7 +9,7 @@ export type {
   Json,
 } from './database'
 
-export type EventStatus = 'today' | 'upcoming' | 'completed'
+export type EventStatus = 'today' | 'upcoming' | 'completed' | 'pending'
 
 export interface EventWithStatus extends EventRow {
   status: EventStatus
@@ -20,6 +20,7 @@ export interface DashboardStats {
   today: number
   upcoming: number
   completed: number
+  pending: number
   totalCost: number
   averageCost: number
 }

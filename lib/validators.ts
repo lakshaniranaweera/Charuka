@@ -36,10 +36,9 @@ export type EventFormValues = z.infer<typeof eventSchema>
 export function normalizeEventValues(values: EventFormValues) {
   const emptyToNull = (v: string | null | undefined) =>
     v === '' || v === undefined ? null : v
-  const today = new Date().toISOString().slice(0, 10)
   return {
-    // event_date is NOT NULL in the DB — default to today when left blank.
-    event_date: values.event_date || today,
+    // Nullable — when left blank the event shows as "Pending".
+    event_date: emptyToNull(values.event_date),
     event_name: values.event_name,
     // cost is NOT NULL (default 0) — default blank to 0.
     cost: values.cost ?? 0,

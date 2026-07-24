@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { BrandColors } from '@/components/providers/brand-colors'
+import { useSettingsContext } from '@/components/providers/settings-provider'
 import { StatCards } from '@/components/dashboard/stat-cards'
 import { EventsTable } from '@/components/dashboard/events-table'
 import {
@@ -17,24 +17,21 @@ import {
   type ToolbarState,
 } from '@/components/dashboard/table-toolbar'
 import { useEvents } from '@/hooks/use-events'
-import { useSettings } from '@/hooks/use-settings'
 import { useFullscreen } from '@/hooks/use-fullscreen'
 import { useFilteredEvents } from '@/hooks/use-filtered-events'
 import { computeStats } from '@/lib/events'
-import type { DashboardSettingsRow, EventRow } from '@/types'
+import type { EventRow } from '@/types'
 
 // REFLECT brand background. Place the image file at public/reflect-background.png
 const DEFAULT_BG = '/reflect-background.png'
 
 export function PublicDashboard({
   initialEvents,
-  initialSettings,
 }: {
   initialEvents: EventRow[]
-  initialSettings: DashboardSettingsRow | null
 }) {
   const { events, loading, refresh } = useEvents(initialEvents)
-  const { settings } = useSettings(initialSettings)
+  const { settings } = useSettingsContext()
   const { isFullscreen, toggle } = useFullscreen()
   const rootRef = React.useRef<HTMLDivElement>(null)
 
@@ -48,15 +45,14 @@ export function PublicDashboard({
   const filtered = useFilteredEvents(events, toolbar)
   const stats = React.useMemo(() => computeStats(events), [events])
 
-  const title = settings?.title ?? 'Activation Planner'
-  const background = settings?.background_url || DEFAULT_BG
+  const title = settings.title
+  const background = settings.background_url || DEFAULT_BG
 
   return (
     <div
       ref={rootRef}
       className="print-full relative min-h-screen w-full overflow-x-hidden"
     >
-      <BrandColors settings={settings} />
       {/* Background — dark base color shows instantly and covers any load gap */}
       <div className="fixed inset-0 -z-10 bg-[#1c1b1e]">
         <Image
@@ -76,7 +72,7 @@ export function PublicDashboard({
         {/* Header */}
         <header className="no-print mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
-            {settings?.logo_url ? (
+            {settings.logo_url ? (
               <Image
                 src={settings.logo_url}
                 alt="Logo"

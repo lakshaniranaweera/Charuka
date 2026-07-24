@@ -183,6 +183,7 @@ export function EventsManager({ initialEvents }: { initialEvents: EventRow[] }) 
                 { label: 'Today', value: 'today' },
                 { label: 'Upcoming', value: 'upcoming' },
                 { label: 'Completed', value: 'completed' },
+                { label: 'Pending', value: 'pending' },
               ]}
             />
           </div>

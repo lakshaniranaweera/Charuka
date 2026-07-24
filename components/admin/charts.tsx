@@ -18,7 +18,7 @@ import { computeStats } from '@/lib/events'
 import { formatCurrency } from '@/lib/format'
 import type { EventRow } from '@/types'
 
-const STATUS_COLORS = ['#f59e0b', '#0ea5e9', '#10b981']
+const STATUS_COLORS = ['#f59e0b', '#0ea5e9', '#10b981', '#94a3b8']
 
 export function DashboardCharts({ events }: { events: EventRow[] }) {
   const stats = useMemo(() => computeStats(events), [events])
@@ -26,6 +26,7 @@ export function DashboardCharts({ events }: { events: EventRow[] }) {
   const byMonth = useMemo(() => {
     const map = new Map<string, number>()
     for (const e of events) {
+      if (!e.event_date) continue // undated (pending) events aren't on the timeline
       const key = format(parseISO(e.event_date), 'MMM yyyy')
       map.set(key, (map.get(key) ?? 0) + Number(e.cost || 0))
     }
@@ -36,6 +37,7 @@ export function DashboardCharts({ events }: { events: EventRow[] }) {
     { name: 'Today', value: stats.today },
     { name: 'Upcoming', value: stats.upcoming },
     { name: 'Completed', value: stats.completed },
+    { name: 'Pending', value: stats.pending },
   ]
 
   return (

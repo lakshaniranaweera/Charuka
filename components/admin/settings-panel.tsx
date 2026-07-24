@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
+import { useSettingsContext } from '@/components/providers/settings-provider'
 import { settingsService } from '@/services/settings.service'
 import type { DashboardSettingsRow, ThemeMode } from '@/types'
 
@@ -29,6 +30,7 @@ export function SettingsPanel({
 }: {
   initialSettings: DashboardSettingsRow
 }) {
+  const { setSettings: setGlobalSettings } = useSettingsContext()
   const [settings, setSettings] =
     React.useState<DashboardSettingsRow>(initialSettings)
   const [saving, setSaving] = React.useState(false)
@@ -48,6 +50,7 @@ export function SettingsPanel({
         logo_url: settings.logo_url,
       })
       setSettings(updated)
+      setGlobalSettings(updated) // apply instantly across the admin app
       toast.success('Settings saved')
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Failed to save')

@@ -13,8 +13,10 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useSettingsContext } from '@/components/providers/settings-provider'
 import { signOutAction } from '@/app/admin/login/actions'
 
 const NAV = [
@@ -25,6 +27,7 @@ const NAV = [
 
 export function Sidebar({ email }: { email: string }) {
   const pathname = usePathname()
+  const { settings } = useSettingsContext()
   const [open, setOpen] = React.useState(false)
 
   const nav = (
@@ -63,11 +66,21 @@ export function Sidebar({ email }: { email: string }) {
   const content = (
     <div className="flex h-full flex-col p-4">
       <Link href="/admin" className="mb-6 flex items-center gap-3 px-2">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-lg">
-          <ShieldCheck className="h-5 w-5" />
-        </div>
-        <div>
-          <p className="font-bold leading-tight">Activation</p>
+        {settings.logo_url ? (
+          <Image
+            src={settings.logo_url}
+            alt="Logo"
+            width={40}
+            height={40}
+            className="h-10 w-10 rounded-xl border border-border/60 object-cover"
+          />
+        ) : (
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-lg">
+            <ShieldCheck className="h-5 w-5" />
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="truncate font-bold leading-tight">{settings.title}</p>
           <p className="text-xs text-muted-foreground">Admin Panel</p>
         </div>
       </Link>

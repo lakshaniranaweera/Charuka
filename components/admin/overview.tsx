@@ -32,7 +32,8 @@ export function AdminOverview({ initialEvents }: { initialEvents: EventRow[] }) 
     () =>
       withStatus(events)
         .filter((e) => getEventStatus(e.event_date) !== 'completed')
-        .sort((a, b) => a.event_date.localeCompare(b.event_date))
+        // Undated (pending) events sort to the end.
+        .sort((a, b) => (a.event_date ?? '9999').localeCompare(b.event_date ?? '9999'))
         .slice(0, 5),
     [events]
   )

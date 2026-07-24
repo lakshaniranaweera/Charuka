@@ -9,7 +9,7 @@ create extension if not exists "pgcrypto";
 -- ----------------------------------------------------------------------------
 create table if not exists public.events (
   id                 uuid primary key default gen_random_uuid(),
-  event_date         date not null,
+  event_date         date,
   event_name         text not null check (char_length(event_name) between 1 and 200),
   cost               numeric(14, 2) not null default 0 check (cost >= 0),
   previsit_date      date,
@@ -166,6 +166,14 @@ create policy "branding_auth_delete"
   on storage.objects for delete
   to authenticated
   using (bucket_id = 'branding');
+
+
+-- ============================================================================
+-- Allow event_date to be NULL. Events without a date are treated as "Pending".
+-- (Safe to run on an existing database that had event_date NOT NULL.)
+-- ============================================================================
+alter table public.events
+  alter column event_date drop not null;
 
 
 -- Optional sample data

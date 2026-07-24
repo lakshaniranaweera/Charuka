@@ -61,6 +61,7 @@ export function TableToolbar({
             { label: 'Today', value: 'today' },
             { label: 'Upcoming', value: 'upcoming' },
             { label: 'Completed', value: 'completed' },
+            { label: 'Pending', value: 'pending' },
           ]}
         />
         <Input

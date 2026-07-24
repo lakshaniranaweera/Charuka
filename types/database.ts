@@ -14,7 +14,7 @@ export type ThemeMode = 'light' | 'dark' | 'system'
 
 export type EventRow = {
   id: string
-  event_date: string
+  event_date: string | null
   event_name: string
   cost: number
   previsit_date: string | null

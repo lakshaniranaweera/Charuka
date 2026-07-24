@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import { SettingsProvider } from '@/components/providers/settings-provider'
+import { getInitialSettings } from '@/lib/supabase/queries'
 import './globals.css'
 
 const inter = Inter({
@@ -36,11 +38,13 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const initialSettings = await getInitialSettings()
+
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className="font-sans">
@@ -50,12 +54,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-          <Toaster
-            richColors
-            position="top-right"
-            toastOptions={{ className: 'rounded-xl' }}
-          />
+          <SettingsProvider initialSettings={initialSettings}>
+            {children}
+            <Toaster
+              richColors
+              position="top-right"
+              toastOptions={{ className: 'rounded-xl' }}
+            />
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>
